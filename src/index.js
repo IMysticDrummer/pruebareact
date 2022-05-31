@@ -2,27 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-class Square extends React.Component {
-  // FAIT: remove the constructor
-  /*constructor(props) {
-    super(props);
-    this.state = {
-      value: null,
-    };
-  }*/
-
-  render() {
-    // FAIT: use onClick={this.props.onClick}
-    // FAIT: replace this.state.value with this.props.value
-    return (
-      <button
-        className="square"
-        onClick={() => this.props.onClick()}
-      >
-        {this.props.value}
-      </button>
-    );
-  }
+//Hemos redefido la clase Square para que sea un
+//componente de función
+function Square (props) {
+  return (
+    <button
+      className='square'
+      onClick={props.onClick}
+    >
+      {props.value}
+    </button>
+  );
 }
 
 class Board extends React.Component {
