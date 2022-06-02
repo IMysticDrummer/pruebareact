@@ -1,3 +1,4 @@
+import { timesSeries } from "async";
 import React from "react";
 
 //Hemos redefido la clase Square para que sea un
@@ -46,6 +47,10 @@ export class Board extends React.Component {
     };
   }
   */
+  constructor(props) {
+    super(props);
+  }
+ /*
   handleClick (i) {
     //const squares =this.state.squares.slice();
     const history = this.state.history;
@@ -72,6 +77,7 @@ export class Board extends React.Component {
       }
     );
   }
+  */
 
   renderSquare(i) {
     //Incluido el handleClick
@@ -87,7 +93,7 @@ export class Board extends React.Component {
     return (
       <div>
         <div className="board-row">
-          {this.renderSquare(0)}{this.renderSquare(1)}{this.renderSquare(2)}
+          {this.renderSquare(0)}{this.renderSquare(1)}{this.renderSquare(2)} 
         </div>
         <div className="board-row">
           {this.renderSquare(3)}{this.renderSquare(4)}{this.renderSquare(5)}
