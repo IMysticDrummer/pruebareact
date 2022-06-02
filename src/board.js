@@ -1,4 +1,3 @@
-import { timesSeries } from "async";
 import React from "react";
 
 //Hemos redefido la clase Square para que sea un
@@ -47,6 +46,7 @@ export class Board extends React.Component {
     };
   }
   */
+ /*
   constructor(props) {
     super(props);
   }

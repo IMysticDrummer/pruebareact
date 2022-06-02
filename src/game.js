@@ -16,12 +16,21 @@ export default class Game extends React.Component {
         }
       ],
       xIsNext: true,
+      stepNumber: 0,
     }
   }
 
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step %2) === 0,
+    });
+  }
+
   handleClick (i) {
-    const indexhistory = this.state.history.length-1;
-    const squares =this.state.history[indexhistory].squares.slice();
+    const history=this.state.history.slice(0, this.state.stepNumber+1);
+    const current=history[history.length-1];
+    const squares =current.squares.slice();
 
     //Si alguien ya ha ganado o el cuadro está
     //ocupado, no hace caso al click
@@ -30,7 +39,11 @@ export default class Game extends React.Component {
     }
 
     squares[i]=this.state.xIsNext ? "X" : "O";
-    this.setState({history: this.state.history.push({'squares':squares}), xIsNext: !this.state.xIsNext});
+    this.setState({
+      history: history.concat([{'squares':squares}]),
+      xIsNext: !this.state.xIsNext,
+      stepNumber: history.length
+    });
     console.log('despues de actualizar history: ');
     console.log(this.state.history);
     console.log(this.state);
@@ -40,12 +53,23 @@ export default class Game extends React.Component {
   render() {
     //Código añadido para mostrar el último añadido a history
     const history=this.state.history;
-    console.log('history: ');
-    console.log(this.state);
-    const current=history[history.length-1];
-    console.log('current: ');
-    console.log(current);
+    const current=history[this.state.stepNumber];
     const winner=calculateWinner(current.squares);
+
+    const moves=history.map(
+      (step, move) => {
+        const desc = move ? "Go to move # "+move: "Go to game start";
+
+        return(
+          <li key={move}>
+            <button onClick={()=>this.jumpTo(move)}>
+              {desc}
+            </button>
+          </li>
+        );
+      }
+    );
+
     let status= winner ? ('Winner: ' + winner)  : ('Next player: ' + (this.state.xIsNext ? 'X' : 'O')); 
     
     return (
@@ -58,7 +82,7 @@ export default class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{ status }</div>
-          <ol>{/* TODO */}</ol>
+          <ol>{moves}</ol>
         </div>
       </div>
     );
