@@ -34,51 +34,7 @@ export function calculateWinner(squares) {
 }
 
 export class Board extends React.Component {
-  //Elevamos el control de los squares e xIsNext desde
-  //squares a board. Tendremos que pasar un argumento con
-  //la ubicación del square.
-  /*
-  constructor(props) {
-    super(props);
-    this.state = {
-      squares: Array(9).fill(null),
-      xIsNext: true
-    };
-  }
-  */
- /*
-  constructor(props) {
-    super(props);
-  }
- /*
-  handleClick (i) {
-    //const squares =this.state.squares.slice();
-    const history = this.state.history;
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    
-    //Si alguien ya ha ganado o el cuadro está
-    //ocupado, no hace caso al click
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
-
-    squares[i]=this.state.xIsNext ? "X" : "O";
-    this.setState(
-      {
-        history: history.concat(
-          [
-            {
-              squares: squares
-            }
-          ]
-        ),
-        xIsNext: !this.state.xIsNext
-      }
-    );
-  }
-  */
-
+  
   renderSquare(i) {
     //Incluido el handleClick
     return (

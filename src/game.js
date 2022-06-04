@@ -1,12 +1,41 @@
 import React from "react";
 import {Board, calculateWinner} from "./board";
 
+function GamePrepare (props) {
+
+}
+
+function handleClick (i, state) {
+  const history=state.history.slice(0, state.stepNumber+1);
+  const current=history[history.length-1];
+  const squares =current.squares.slice();
+
+  //Si alguien ya ha ganado o el cuadro está
+  //ocupado, no hace caso al click
+  if (calculateWinner(squares) || squares[i]) {
+    return;
+  }
+
+  squares[i]=state.xIsNext ? "X" : "O";
+
+  return(
+    {
+      history: history.concat([{'squares':squares}]),
+      xIsNext: !state.xIsNext,
+      stepNumber: history.length
+    }
+  );
+}
+
+function jumpTo(step) {
+  return (
+    {
+      stepNumber: step,
+      xIsNext: (step %2) === 0,
+    }
+  );
+}
 export default class Game extends React.Component {
-  //Elevamos el control de los squares e xIsNext desde
-  //squares a board. Tendremos que pasar un argumento con
-  //la ubicación del square.
-  //También guardamos el historial, mostrando el último de
-  //ellos
   constructor(props) {
     super(props);
     this.state= {
@@ -18,35 +47,6 @@ export default class Game extends React.Component {
       xIsNext: true,
       stepNumber: 0,
     }
-  }
-
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step %2) === 0,
-    });
-  }
-
-  handleClick (i) {
-    const history=this.state.history.slice(0, this.state.stepNumber+1);
-    const current=history[history.length-1];
-    const squares =current.squares.slice();
-
-    //Si alguien ya ha ganado o el cuadro está
-    //ocupado, no hace caso al click
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
-
-    squares[i]=this.state.xIsNext ? "X" : "O";
-    this.setState({
-      history: history.concat([{'squares':squares}]),
-      xIsNext: !this.state.xIsNext,
-      stepNumber: history.length
-    });
-    console.log('despues de actualizar history: ');
-    console.log(this.state.history);
-    console.log(this.state);
   }
   
   //Modificamos para mostrar el tablero reciente desde el history
@@ -62,7 +62,11 @@ export default class Game extends React.Component {
 
         return(
           <li key={move}>
-            <button onClick={()=>this.jumpTo(move)}>
+            <button onClick={
+              ()=>{
+                this.setState(jumpTo(move));
+              }
+            }>
               {desc}
             </button>
           </li>
@@ -77,7 +81,11 @@ export default class Game extends React.Component {
         <div className="game-board">
           <Board
             squares={current.squares}
-            onClick={(i) => this.handleClick(i)}
+            onClick={
+              (i) => {
+                this.setState(handleClick(i, this.state));
+              }
+            }
           />
         </div>
         <div className="game-info">
