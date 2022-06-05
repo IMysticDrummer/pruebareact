@@ -1,8 +1,46 @@
 import React from "react";
 import {Board, calculateWinner} from "./board";
+import {addGameStatus, jumpTo} from "./gameSlice";
+import { useSelector, useDispatch } from "react-redux";
 
-function GamePrepare (props) {
+function GameRender (props) {
+  const state=useSelector((state) => state.gameStore);
+  const history=useSelector((state) => state.gameStore.history);
+  console.log(history);
+  const stepNumber=useSelector((state) => state.gameStore.stepNumber);
+  const xIsNext=useSelector((state) => state.gameStore.xIsNext);
+  const current=history[stepNumber];
+  const winner=calculateWinner(current.squares);
 
+  const moves=history.map(
+    (step, move) => {
+      return(
+        <ButtonsList move={move} />
+      );
+    }
+  );
+
+  let status= winner ? ('Winner: ' + winner)  : ('Next player: ' + (xIsNext ? 'X' : 'O'));
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board
+          squares={current.squares}
+          onClick={
+            //(i) => {
+              //this.setState(handleClick(i, this.state));
+              useDispatch(addGameStatus(handleClick(i,state)))
+            //}
+          }
+        />
+      </div>
+      <div className="game-info">
+        <div>{ status }</div>
+        <ol>{moves}</ol>
+      </div>
+    </div>
+  );
 }
 
 function handleClick (i, state) {
@@ -27,12 +65,16 @@ function handleClick (i, state) {
   );
 }
 
-function jumpTo(step) {
-  return (
-    {
-      stepNumber: step,
-      xIsNext: (step %2) === 0,
-    }
+function ButtonsList (props) {
+  const desc = props.move ? "Go to move # "+props.move: "Go to game start";
+  return(
+    <li key={props.move}>
+      <button onClick={
+          useDispatch(jumpTo(props.move))
+      }>
+        {desc}
+      </button>
+    </li>
   );
 }
 export default class Game extends React.Component {
@@ -52,30 +94,22 @@ export default class Game extends React.Component {
   //Modificamos para mostrar el tablero reciente desde el history
   render() {
     //Código añadido para mostrar el último añadido a history
+    /*
     const history=this.state.history;
     const current=history[this.state.stepNumber];
     const winner=calculateWinner(current.squares);
 
     const moves=history.map(
       (step, move) => {
-        const desc = move ? "Go to move # "+move: "Go to game start";
-
         return(
-          <li key={move}>
-            <button onClick={
-              ()=>{
-                this.setState(jumpTo(move));
-              }
-            }>
-              {desc}
-            </button>
-          </li>
+          <ButtonsList move={move} />
         );
       }
     );
 
     let status= winner ? ('Winner: ' + winner)  : ('Next player: ' + (this.state.xIsNext ? 'X' : 'O')); 
     
+
     return (
       <div className="game">
         <div className="game-board">
@@ -93,6 +127,10 @@ export default class Game extends React.Component {
           <ol>{moves}</ol>
         </div>
       </div>
+    );
+    */
+    return(
+      <GameRender />
     );
   }
 }
