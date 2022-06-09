@@ -5,33 +5,60 @@ import { useSelector, useDispatch } from "react-redux";
 
 function GameRender (props) {
   const state=useSelector((state) => state.gameStore);
-  const history=useSelector((state) => state.gameStore.history);
+  /*const history=useSelector((state) => state.gameStore.history);
   console.log(history);
   const stepNumber=useSelector((state) => state.gameStore.stepNumber);
   const xIsNext=useSelector((state) => state.gameStore.xIsNext);
   const current=history[stepNumber];
   const winner=calculateWinner(current.squares);
+  */
+
+  //Para usar directamente el store
+  const stepNumber=state.stepNumber;
+  const history=state.history.slice(0, stepNumber+1);
+  const current=history[history.length-1];
+  const squares=current.squares.slice();
+  const winner=calculateWinner(current.squares);
+  const xIsNext=useSelector((state) => state.gameStore.xIsNext);
 
   const moves=history.map(
     (step, move) => {
       return(
-        <ButtonsList move={move} />
+        <ButtonsList move={move} key={stepNumber} />
       );
     }
   );
 
   let status= winner ? ('Winner: ' + winner)  : ('Next player: ' + (xIsNext ? 'X' : 'O'));
 
+  const dispatch=useDispatch();
   return (
     <div className="game">
       <div className="game-board">
         <Board
-          squares={current.squares}
+          squares={
+            //current.squares
+            squares
+          }
           onClick={
-            //(i) => {
+            (i) => {
               //this.setState(handleClick(i, this.state));
-              useDispatch(addGameStatus(handleClick(i,state)))
-            //}
+              //useDispatch(addGameStatus(handleClick(i,state)))
+              //useDispatch(addGameStatus(handleClick2(i)))
+              console.log('Has clicado en: '+i);
+              console.log(state);
+              
+              //Si alguien ya ha ganado o el cuadro está
+              //ocupado, no hace caso al click
+              if (calculateWinner(squares) || squares[i]) {
+                return;
+              }
+
+              squares[i]=state.xIsNext ? "X" : "O";
+              console.log(squares);
+
+              dispatch(addGameStatus(state,squares));
+            }
           }
         />
       </div>
