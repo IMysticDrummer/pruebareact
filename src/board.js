@@ -3,10 +3,10 @@ import React from "react";
 //Hemos redefido la clase Square para que sea un
 //componente de función
 function Square (props) {
-  return (
+  return(
     <button
-      className='square'
-      onClick={props.onClick}
+      className="square"
+      onClick={() => props.onClick(props.index)}
     >
       {props.value}
     </button>
@@ -39,8 +39,9 @@ export class Board extends React.Component {
     //Incluido el handleClick
     return (
       <Square
-        value={this.props.squares[i]} //Cambio de this.state por this.props
-        onClick={() => this.props.onClick(i)} //Cambio this.handleClick por this.props.onClick
+        index={i}
+        value={this.props.squares[i]}
+        onClick={this.props.onClick}
       />
     );
   }

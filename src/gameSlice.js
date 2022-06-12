@@ -4,7 +4,7 @@ export const gameSlice= createSlice({
   name: 'gameStatus',
 
   initialState: {
-    history: [
+    stepsHistory: [
       {
         squares: Array(9).fill(null)
       }
@@ -15,15 +15,19 @@ export const gameSlice= createSlice({
 
   reducers:{
     addGameStatus: (state, squares) => {
-      //Atención, squares debe ser un array de objetos
-      state.history.concat(squares);
+      //Atención, squares debe ser un array
+      //y aquí lo convertimos en un objeto
+      //para añadirlo al array stepsHistory
+      const squaresTemp={'squares': squares.payload};
+      const history=state.stepsHistory.slice(0, state.stepNumber+1);
+      state.stepsHistory=[...history,squaresTemp];
       state.xIsNext=!state.xIsNext;
-      state.stepNumber=state.history.length;
+      state.stepNumber=state.stepsHistory.length;
     },
 
     jumpTo: (state, step) => {
-      state.stepNumber=step;
-      state.xIsNext=(state.xIsNext%2)===0;
+      state.stepNumber=step.payload;
+      state.xIsNext=(state.stepNumber%2)===0;
     },
   },
 })
